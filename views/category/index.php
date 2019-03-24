@@ -11,7 +11,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel artsoft\post\search\CategorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('art/media', 'Categories');
+$this->title = Yii::t('art/post', 'Categories');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('art/post', 'Posts'), 'url' => ['default/index']];
 $this->params['breadcrumbs'][] = $this->title;
 

@@ -130,7 +130,7 @@ class Post extends ActiveRecord implements OwnerAccess
             'created_at' => Yii::t('art', 'Created'),
             'updated_at' => Yii::t('art', 'Updated'),
             'revision' => Yii::t('art', 'Revision'),
-            'tagValues' => Yii::t('art', 'Tags'),
+            'tagValues' => Yii::t('art/post', 'Tags'),
         ];
     }
 
