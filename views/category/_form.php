@@ -43,6 +43,23 @@ use artsoft\widgets\LanguagePills;
                 <div class="panel-body">
                     <div class="record-info">
 
+                         <?php if (!$model->isNewRecord): ?>
+
+                            <div class="form-group clearfix">
+                                <label class="control-label" style="float: left; padding-right: 5px;">
+                             <?= $model->attributeLabels()['created_at'] ?> :
+                                </label>
+                                <span><?= $model->createdDatetime ?></span>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="control-label" style="float: left; padding-right: 5px;">
+                            <?= $model->attributeLabels()['updated_at'] ?> :
+                                </label>
+                                <span><?= $model->updatedDatetime ?></span>
+                            </div>
+                        <?php endif; ?>
+                        
                         <?= $form->field($model, 'visible')->checkbox() ?>
 
                         <div class="form-group">

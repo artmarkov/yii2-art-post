@@ -14,9 +14,7 @@
   ],
   "require": {
     "artsoft/yii2-art-core": "dev-master",
-    "artsoft/yii2-art-media": "dev-master",
-    "creocoder/yii2-nested-sets": "^0.9.0",
-    "klisl/yii2-nested-sets-drag-and-drop": "^1.3"
+    "artsoft/yii2-art-media": "dev-master"
   },
   "autoload": {
     "psr-4": {

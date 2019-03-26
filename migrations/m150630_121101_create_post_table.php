@@ -24,15 +24,11 @@ class m150630_121101_create_post_table extends Migration
             'updated_at' => $this->integer(),
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
-            'left_border' => $this->integer()->notNull(),
-            'right_border' => $this->integer()->notNull(),
-            'depth' => $this->integer()->notNull(),
+            'sortOrder' => $this->integer(),
         ], $tableOptions);
         
         $this->createIndex('post_category_slug', self::POST_CATEGORY_TABLE, 'slug');
         $this->createIndex('post_category_visible', self::POST_CATEGORY_TABLE, 'visible');
-        $this->createIndex('left_border', self::POST_CATEGORY_TABLE, ['left_border', 'right_border']);
-        $this->createIndex('right_border', self::POST_CATEGORY_TABLE, ['right_border']);
         $this->addForeignKey('fk_post_category_created_by', self::POST_CATEGORY_TABLE, 'created_by', '{{%user}}', 'id', 'SET NULL', 'CASCADE');
         $this->addForeignKey('fk_post_category_updated_by', self::POST_CATEGORY_TABLE, 'updated_by', '{{%user}}', 'id', 'SET NULL', 'CASCADE');
         $this->insert(self::POST_CATEGORY_TABLE, ['id' => 1, 'slug' => 'root', 'depth' => 0, 'created_at' => time(), 'visible' => 0, 'left_border' => 0, 'right_border' => 2147483647]);

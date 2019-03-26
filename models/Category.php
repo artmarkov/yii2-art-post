@@ -2,14 +2,14 @@
 
 namespace artsoft\post\models;
 
-use creocoder\nestedsets\NestedSetsBehavior;
 use artsoft\behaviors\MultilingualBehavior;
 use artsoft\models\OwnerAccess;
+use artsoft\db\ActiveRecord;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use artsoft\behaviors\SluggableBehavior;
-use yii\behaviors\TimestampBehavior;
-use artsoft\db\ActiveRecord;
+use himiklab\sortablegrid\SortableGridBehavior;
 
 /**
  * This is the model class for table "post_category".
@@ -19,6 +19,7 @@ use artsoft\db\ActiveRecord;
  * @property string $title
  * @property integer $visible
  * @property string $description
+ * @property integer $sortOrder
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $created_by
@@ -41,7 +42,8 @@ class Category extends ActiveRecord implements OwnerAccess
     {
         return [
             [['title'], 'required'],
-            [['created_by', 'updated_by', 'created_at', 'updated_at', 'visible'], 'integer'],
+            [['visible', 'sortOrder'], 'integer'],
+            [['created_by', 'updated_by', 'created_at', 'updated_at'], 'safe'],
             [['description'], 'string'],
             [['slug', 'title'], 'string', 'max' => 255],
         ];
@@ -61,6 +63,10 @@ class Category extends ActiveRecord implements OwnerAccess
                 'out_attribute' => 'slug',
                 'translit' => true           
             ],
+            'sort' => [
+                'class' => SortableGridBehavior::className(),
+                'sortableAttribute' => 'sortOrder',
+            ],            
             'multilingual' => [
                 'class' => MultilingualBehavior::className(),
                 'langForeignKey' => 'post_category_id',
@@ -68,13 +74,6 @@ class Category extends ActiveRecord implements OwnerAccess
                 'attributes' => [
                     'title', 'description',
                 ]
-            ],
-            'tree' => [
-                'class' => NestedSetsBehavior::className(),
-                // 'treeAttribute' => 'tree',
-                 'leftAttribute' => 'left_border',
-                 'rightAttribute' => 'right_border',
-                
             ],
         ];
     }
@@ -108,6 +107,36 @@ class Category extends ActiveRecord implements OwnerAccess
             'updated_at' => Yii::t('art', 'Updated'),
         ];
     }
+    
+    public function getCreatedDate()
+    {
+        return Yii::$app->formatter->asDate(($this->isNewRecord) ? time() : $this->created_at);
+    }
+
+    public function getUpdatedDate()
+    {
+        return Yii::$app->formatter->asDate(($this->isNewRecord) ? time() : $this->updated_at);
+    }
+
+    public function getCreatedTime()
+    {
+        return Yii::$app->formatter->asTime(($this->isNewRecord) ? time() : $this->created_at);
+    }
+
+    public function getUpdatedTime()
+    {
+        return Yii::$app->formatter->asTime(($this->isNewRecord) ? time() : $this->updated_at);
+    }
+
+    public function getCreatedDatetime()
+    {
+        return "{$this->createdDate} {$this->createdTime}";
+    }
+
+    public function getUpdatedDatetime()
+    {
+        return "{$this->updatedDate} {$this->updatedTime}";
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -119,7 +148,7 @@ class Category extends ActiveRecord implements OwnerAccess
 
     public static function getCategories()
     {
-        return \yii\helpers\ArrayHelper::map(Category::find()->joinWith('translations')->leaves()->all(), 'id', 'title');
+        return \yii\helpers\ArrayHelper::map(Category::find()->joinWith('translations')->all(), 'id', 'title');
     }
     /**
      * 
@@ -127,7 +156,7 @@ class Category extends ActiveRecord implements OwnerAccess
      */
     public static function getCategoriesMenu()
     {
-        return \yii\helpers\ArrayHelper::map(Category::find()->joinWith('translations')->leaves()->all(), 'slug', 'title');
+        return \yii\helpers\ArrayHelper::map(Category::find()->joinWith('translations')->all(), 'slug', 'title');
     }
     /**
      *

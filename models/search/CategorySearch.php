@@ -18,7 +18,7 @@ class CategorySearch extends Category
     public function rules()
     {
         return [
-            [['id', 'visible', 'created_by', 'updated_by'], 'integer'],
+            [['id', 'visible', 'created_by', 'updated_by', 'sortOrder'], 'integer'],
             [['slug', 'title', 'description', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -50,7 +50,7 @@ class CategorySearch extends Category
             ],
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_DESC,
+                    'sortOrder' => SORT_ASC,
                 ],
             ],
         ]);

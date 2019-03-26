@@ -2,7 +2,10 @@
 
 use artsoft\helpers\Html;
 use yii\helpers\Url;
-use klisl\nestable\Nestable;
+use artsoft\grid\GridPageSize;
+use yii\widgets\Pjax;
+use artsoft\grid\SortableGridView;
+use artsoft\post\models\Category;
 
 /* @var $this yii\web\View */
 /* @var $searchModel artsoft\post\search\CategorySearch */
@@ -26,34 +29,53 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="panel-body">
 
             <div class="row">
-                <div class="col-sm-12">
-
-                    <?=
-                    Nestable::widget([
-                        'type' => Nestable::TYPE_LIST,
-                        'query' => $query,
-                        'modelOptions' => [
-                            'name' => 'title', //поле из БД с названием элемента (отображается в дереве)
-                        ],
-                        'pluginEvents' => [
-                            'change' => 'function(e) {}', //js событие при выборе элемента
-                        ],
-                        'pluginOptions' => [
-                            'maxDepth' => 3, //максимальное кол-во уровней вложенности
-                        ],
-                        'update' => Url::to(['update']), //действие по обновлению
-                        'delete' => Url::to(['delete']), //действие по удалению
-//                        'viewItem' => Url::to(['view']), 
-                    ]);
-                    ?>
-
-                    <div id="nestable-menu">
-                        <button class="btn btn-sm btn-primary" type="button" data-action="expand-all"><?= Yii::t('art/post', 'Expand All')?></button>
-                        <button class="btn btn-sm btn-default" type="button" data-action="collapse-all"><?= Yii::t('art/post', 'Collapse All')?></button>
-                    </div>
-
+                <div class="col-sm-12 text-right">
+                    <?= GridPageSize::widget(['pjaxId' => 'post-category-grid-pjax']) ?>
                 </div>
             </div>
+
+            <?php Pjax::begin(['id' => 'post-category-grid-pjax']) ?>
+
+            <?= SortableGridView::widget([
+                'id' => 'post-category-grid',
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'bulkActionOptions' => [
+                    'gridId' => 'post-category-grid',
+                    'actions' => [Url::to(['bulk-delete']) => Yii::t('art', 'Delete')]
+                ],
+                'columns' => [
+                    ['class' => 'artsoft\grid\CheckboxColumn', 'options' => ['style' => 'width:10px']],
+                    [
+                        'class' => 'artsoft\grid\columns\TitleActionColumn',
+                        'controller' => '/post/category',
+                        'title' => function (Category $model) {
+                            return Html::a($model->title, ['update', 'id' => $model->id], ['data-pjax' => 0]);
+                        },
+                        'buttonsTemplate' => '{update} {delete}',
+                    ],
+//                    [
+//                        'attribute' => 'parent_id',
+//                        'value' => function (Category $model) {
+//                            if ($parent = $model->getParent()->one() AND $parent->id > 1) {
+//                                return Html::a($parent->title, ['update', 'id' => $parent->id], ['data-pjax' => 0]);
+//                            } else {
+//                                return '<span class="not-set">' . Yii::t('yii', '(not set)') . '</span>';
+//                            }
+//                        },
+//                        'format' => 'raw',
+//                        'filter' => Category::getCategories(),
+//                        'filterInputOptions' => ['class' => 'form-control', 'encodeSpaces' => true],
+//                    ],
+                    'description:ntext',
+                    [
+                        'class' => 'artsoft\grid\columns\StatusColumn',
+                        'attribute' => 'visible',
+                    ],
+                ],
+            ]); ?>
+
+            <?php Pjax::end() ?>
         </div>
     </div>
 </div>
