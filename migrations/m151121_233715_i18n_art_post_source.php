@@ -13,6 +13,7 @@ class m151121_233715_i18n_art_post_source extends SourceMessagesMigration
     public function getMessages()
     {
         return [
+            'Categories' => 1,
             'Create Category' => 1,
             'Update Category' => 1,
             'Create Tag' => 1,

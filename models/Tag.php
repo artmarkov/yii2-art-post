@@ -5,11 +5,11 @@ namespace artsoft\post\models;
 use artsoft\behaviors\MultilingualBehavior;
 use artsoft\models\OwnerAccess;
 use artsoft\models\User;
+use artsoft\db\ActiveRecord;
 use Yii;
 use yii\behaviors\BlameableBehavior;
-use yii\behaviors\SluggableBehavior;
+use artsoft\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
-use artsoft\db\ActiveRecord;
 
 /**
  * This is the model class for table "post_tag".
@@ -46,10 +46,12 @@ class Tag extends ActiveRecord implements OwnerAccess
     {
         return [
             BlameableBehavior::className(),
-            TimestampBehavior::className(),
-            'sluggable' => [
+            TimestampBehavior::className(),           
+            [
                 'class' => SluggableBehavior::className(),
-                'attribute' => 'title',
+                'in_attribute' => 'title',
+                'out_attribute' => 'slug',
+                'translit' => true           
             ],
             'multilingual' => [
                 'class' => MultilingualBehavior::className(),
@@ -138,18 +140,46 @@ class Tag extends ActiveRecord implements OwnerAccess
     /**
      * @inheritdoc
      */
+    
     public static function getTags()
     {
         $result = [];
         $tags = static::find()->all();
         foreach ($tags as $tag) {
-            $result[] = ['id' => $tag->id, 'name' => $tag->title];
+            $result += [$tag->id => $tag->title];
         }
-        
+        //echo '<pre>' . print_r($result, true) . '</pre>';
         return $result;
         
-    }
+    } 
+    /**
+     * for TagsCloud Widget
+     * @return array
+     */
+    public static function getTagsCloud() {
+        $result = [];
+        $tags = static::find()->all();
+        foreach ($tags as $tag) {
+            $count = self::find()
+                    ->innerJoin('post_tag_post', 'post_tag_post.tag_id = post_tag.id')
+                    ->where(['post_tag.id' => $tag->id])
+                    ->count();
+            if ($count != 0) {
+                $result[] = [
+                    'id' => $tag->id,
+                    'name' => $tag->title,
+                    'slug' => $tag->slug,
+                    'count' => $count
+                ];
+            }
+        }
 
+        return $result;
+    }
+    /**
+     * 
+     * @return \backend\modules\post\models\TagQuery
+     */
     public static function find()
     {
         return new TagQuery(get_called_class());

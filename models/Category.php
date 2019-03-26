@@ -2,12 +2,12 @@
 
 namespace artsoft\post\models;
 
-use paulzi\nestedintervals\NestedIntervalsBehavior;
+use creocoder\nestedsets\NestedSetsBehavior;
 use artsoft\behaviors\MultilingualBehavior;
 use artsoft\models\OwnerAccess;
 use Yii;
 use yii\behaviors\BlameableBehavior;
-use yii\behaviors\SluggableBehavior;
+use artsoft\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 use artsoft\db\ActiveRecord;
 
@@ -26,9 +26,6 @@ use artsoft\db\ActiveRecord;
  */
 class Category extends ActiveRecord implements OwnerAccess
 {
-
-    public $parent_id;
-
     /**
      * @inheritdoc
      */
@@ -40,20 +37,11 @@ class Category extends ActiveRecord implements OwnerAccess
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        parent::init();
-        $this->visible = 1;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
             [['title'], 'required'],
-            [['created_by', 'updated_by', 'created_at', 'updated_at', 'visible', 'parent_id'], 'integer'],
+            [['created_by', 'updated_by', 'created_at', 'updated_at', 'visible'], 'integer'],
             [['description'], 'string'],
             [['slug', 'title'], 'string', 'max' => 255],
         ];
@@ -66,10 +54,12 @@ class Category extends ActiveRecord implements OwnerAccess
     {
         return [
             BlameableBehavior::className(),
-            TimestampBehavior::className(),
-            'sluggable' => [
+            TimestampBehavior::className(),           
+            [
                 'class' => SluggableBehavior::className(),
-                'attribute' => 'title',
+                'in_attribute' => 'title',
+                'out_attribute' => 'slug',
+                'translit' => true           
             ],
             'multilingual' => [
                 'class' => MultilingualBehavior::className(),
@@ -79,21 +69,26 @@ class Category extends ActiveRecord implements OwnerAccess
                     'title', 'description',
                 ]
             ],
-            'nestedInterval' => [
-                'class' => NestedIntervalsBehavior::className(),
-                'leftAttribute' => 'left_border',
-                'rightAttribute' => 'right_border',
-                'amountOptimize' => '25',
-                'noPrepend' => true,
+            'tree' => [
+                'class' => NestedSetsBehavior::className(),
+                // 'treeAttribute' => 'tree',
+                 'leftAttribute' => 'left_border',
+                 'rightAttribute' => 'right_border',
+                
             ],
         ];
     }
 
-    public function transactions()
+     public function transactions()
     {
         return [
             self::SCENARIO_DEFAULT => self::OP_ALL,
         ];
+    }
+
+    public static function find()
+    {
+        return new CategoryQuery(get_called_class());
     }
 
     /**
@@ -115,37 +110,6 @@ class Category extends ActiveRecord implements OwnerAccess
     }
 
     /**
-     *
-     * @inheritdoc
-     */
-    public function save($runValidation = true, $attributeNames = null)
-    {
-        $parent = null;
-
-        if (isset($this->parent_id) && $this->parent_id) {
-            $parent = Category::findOne((int)$this->parent_id);
-        }
-
-        if (!$parent) {
-            $parent = Category::findOne(1);
-        }
-
-        if (!$parent) {
-            throw new \yii\base\InvalidParamException();
-        }
-
-
-        $this->appendTo($parent);
-
-        try {
-            return parent::save($runValidation, $attributeNames);
-        } catch (yii\base\Exception $exc) {
-            \Yii::$app->session->setFlash('crudMessage', $exc->getMessage());
-        }
-
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getPosts()
@@ -153,34 +117,18 @@ class Category extends ActiveRecord implements OwnerAccess
         return $this->hasMany(Post::className(), ['category_id' => 'id']);
     }
 
+    public static function getCategories()
+    {
+        return \yii\helpers\ArrayHelper::map(Category::find()->joinWith('translations')->leaves()->all(), 'id', 'title');
+    }
     /**
-     * Return all categories.
-     *
-     * @param bool $asArray
-     *
-     * @return static[]
+     * 
+     * @return type
      */
-    public static function getCategories($skipCategories = [])
+    public static function getCategoriesMenu()
     {
-        $result = [];
-        $categories = Category::findOne(1)->getDescendants()->joinWith('translations')->all();
-
-        foreach ($categories as $category) {
-            if (!in_array($category->id, $skipCategories)) {
-                $result[$category->id] = str_repeat('   ', ($category->depth - 1)) . $category->title;
-            }
-        }
-
-        return $result;
+        return \yii\helpers\ArrayHelper::map(Category::find()->joinWith('translations')->leaves()->all(), 'slug', 'title');
     }
-
-
-    public static function find()
-    {
-        return new CategoryQuery(get_called_class());
-
-    }
-
     /**
      *
      * @inheritdoc

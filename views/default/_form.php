@@ -8,7 +8,6 @@ use artsoft\post\models\Post;
 use artsoft\widgets\ActiveForm;
 use artsoft\widgets\LanguagePills;
 use yii\jui\DatePicker;
-use artsoft\post\widgets\MagicSuggest;
 use artsoft\post\models\Tag;
 
 /* @var $this yii\web\View */
@@ -34,12 +33,6 @@ use artsoft\post\models\Tag;
                         <?php if ($model->isMultilingual()): ?>
                             <?= LanguagePills::widget() ?>
                         <?php endif; ?>
-
-                        <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-
-                        <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
-                        
-                        <?= $form->field($model, 'tagValues')->widget(MagicSuggest::className(), ['items' => Tag::getTags()]); ?>
 
                         <?= $form->field($model, 'content')->widget(TinyMce::className()); ?>
 
@@ -96,30 +89,44 @@ use artsoft\post\models\Tag;
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
 
-                        <div class="record-info">
-                            <?= $form->field($model, 'category_id')->dropDownList(Category::getCategories(), ['prompt' => '', 'encodeSpaces' => true]) ?>
+                    <div class="record-info">
+                        <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-                            <?= $form->field($model, 'published_at')
-                                ->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control']]); ?>
+                        <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
 
-                            <?= $form->field($model, 'status')->dropDownList(Post::getStatusList()) ?>
+                        <?=
+                        $form->field($model, 'tag_list')->widget(nex\chosen\Chosen::className(), [
+                            'items' => Tag::getTags(),
+                            'multiple' => true,
+                            'translateCategory' => 'art/post',
+                            'placeholder' => Yii::t('art/post', 'Select Tags...'),
+                        ])
+                        ?>
 
-                            <?php if (!$model->isNewRecord): ?>
-                                <?= $form->field($model, 'created_by')->dropDownList(User::getUsersList()) ?>
-                            <?php endif; ?>
+                        <?= $form->field($model, 'category_id')->dropDownList(Category::getCategories(), ['prompt' => '', 'encodeSpaces' => true]) ?>
 
-                            <?= $form->field($model, 'comment_status')->dropDownList(Post::getCommentStatusList()) ?>
+                        <?= $form->field($model, 'published_at')
+                                ->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control']]);
+                        ?>
 
-                            <?= $form->field($model, 'view')->dropDownList($this->context->module->viewList) ?>
+                        <?= $form->field($model, 'status')->dropDownList(Post::getStatusList()) ?>
 
-                            <?= $form->field($model, 'layout')->dropDownList($this->context->module->layoutList) ?>
+                        <?php if (!$model->isNewRecord): ?>
+                            <?= $form->field($model, 'created_by')->dropDownList(User::getUsersList()) ?>
+                        <?php endif; ?>
 
-                        </div>
+                        <?= $form->field($model, 'comment_status')->dropDownList(Post::getCommentStatusList()) ?>
+
+                        <?= $form->field($model, 'view')->dropDownList($this->context->module->viewList) ?>
+
+                        <?= $form->field($model, 'layout')->dropDownList($this->context->module->layoutList) ?>
+
                     </div>
                 </div>
+            </div>
 
                 <div class="panel panel-default">
                     <div class="panel-body">

@@ -30,8 +30,6 @@ use artsoft\widgets\LanguagePills;
 
                     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-                    <?php echo $form->field($model, 'parent_id')->dropDownList(Category::getCategories(), ['prompt' => '', 'encodeSpaces' => true]) ?>
-
                     <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
 
                     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
