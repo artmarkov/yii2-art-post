@@ -75,8 +75,21 @@ class PostSearch extends Post
             'revision' => $this->revision,
         ]);
 
-        $query->andFilterWhere([($this->published_at_operand) ? $this->published_at_operand : '=', 'published_at', ($this->published_at) ? strtotime($this->published_at) : null]);
-
+        switch ($this->published_at_operand) {
+            case '=':
+                $query->andFilterWhere(['>=', 'published_at', ($this->published_at) ? strtotime($this->published_at) : null]);
+                $query->andFilterWhere(['<=', 'published_at', ($this->published_at) ? strtotime($this->published_at . ' 23:59:59') : null]);
+                break;
+            case '>':
+                $query->andFilterWhere(['>', 'published_at', ($this->published_at) ? strtotime($this->published_at . ' 23:59:59') : null]);
+                break;
+            case '<':
+                $query->andFilterWhere(['<', 'published_at', ($this->published_at) ? strtotime($this->published_at) : null]);
+                break;
+            default:
+                break;
+        }
+        
         $query->andFilterWhere(['like', 'slug', $this->slug])
             ->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'content', $this->content]);

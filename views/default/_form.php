@@ -7,7 +7,7 @@ use artsoft\post\models\Category;
 use artsoft\post\models\Post;
 use artsoft\widgets\ActiveForm;
 use artsoft\widgets\LanguagePills;
-use yii\jui\DatePicker;
+use kartik\date\DatePicker;
 use artsoft\post\models\Tag;
 
 /* @var $this yii\web\View */
@@ -108,9 +108,8 @@ use artsoft\post\models\Tag;
 
                         <?= $form->field($model, 'category_id')->dropDownList(Category::getCategories(), ['prompt' => '', 'encodeSpaces' => true]) ?>
 
-                        <?= $form->field($model, 'published_at')
-                                ->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control']]);
-                        ?>
+                        <?= $form->field($model, 'published_time')->widget(DatePicker::classname())->textInput(['autocomplete' => 'off']); ?>
+
 
                         <?= $form->field($model, 'status')->dropDownList(Post::getStatusList()) ?>
 

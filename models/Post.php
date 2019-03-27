@@ -7,7 +7,8 @@ use artsoft\models\OwnerAccess;
 use artsoft\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
-use yii\behaviors\SluggableBehavior;
+use artsoft\behaviors\SluggableBehavior;
+use artsoft\behaviors\DateToTimeBehavior;
 use yii\behaviors\TimestampBehavior;
 use artsoft\db\ActiveRecord;
 use yii\helpers\Html;
@@ -36,14 +37,15 @@ use yii\helpers\Html;
  * @property PostLang[] $postLangs
  * @property Tag[] $tags
  */
-class Post extends ActiveRecord implements OwnerAccess
-{
+class Post extends ActiveRecord implements OwnerAccess {
 
     const STATUS_PENDING = 0;
     const STATUS_PUBLISHED = 1;
     const COMMENT_STATUS_CLOSED = 0;
     const COMMENT_STATUS_OPEN = 1;
 
+     public $published_time;
+     
     /**
      * @inheritdoc
      */
@@ -59,13 +61,11 @@ class Post extends ActiveRecord implements OwnerAccess
     {
         parent::init();
 
-        if ($this->isNewRecord && $this->className() == Post::className()) {
+        if ($this->isNewRecord && $this->className() == Post::className())
+        {
             $this->published_at = time();
         }
-
         $this->on(self::EVENT_BEFORE_UPDATE, [$this, 'updateRevision']);
-        $this->on(self::EVENT_AFTER_UPDATE, [$this, 'saveTags']);
-        $this->on(self::EVENT_AFTER_INSERT, [$this, 'saveTags']);
     }
 
     /**
@@ -76,9 +76,11 @@ class Post extends ActiveRecord implements OwnerAccess
         return [
             TimestampBehavior::className(),
             BlameableBehavior::className(),
-            'sluggable' => [
+            [
                 'class' => SluggableBehavior::className(),
-                'attribute' => 'title',
+                'in_attribute' => 'title',
+                'out_attribute' => 'slug',
+                'translit' => true
             ],
             'multilingual' => [
                 'class' => MultilingualBehavior::className(),
@@ -93,7 +95,16 @@ class Post extends ActiveRecord implements OwnerAccess
                 'relations' => [
                     'tags' => 'tag_list',
                 ],
-            ],    
+            ],
+            [
+                'class' => DateToTimeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_VALIDATE => 'published_time',
+                    ActiveRecord::EVENT_AFTER_FIND => 'published_time',
+                ],
+                'timeAttribute' => 'published_at',
+                'timeFormat' => 'd.m.Y',
+            ],
         ];
     }
 
@@ -110,7 +121,7 @@ class Post extends ActiveRecord implements OwnerAccess
             [['slug'], 'string', 'max' => 127],
             [['tag_list'], 'safe'],
             [['thumbnail'], 'string', 'max' => 255],
-            ['published_at', 'date', 'timestampAttribute' => 'published_at', 'format' => 'yyyy-MM-dd'],
+            ['published_time', 'date', 'format' => 'php:d.m.Y'],
             ['published_at', 'default', 'value' => time()],
         ];
     }
@@ -141,7 +152,7 @@ class Post extends ActiveRecord implements OwnerAccess
         ];
     }
 
-   /**
+    /**
      * @inheritdoc
      * @return PostQuery the active query used by this AR class.
      */
@@ -164,9 +175,8 @@ class Post extends ActiveRecord implements OwnerAccess
     public function getTags()
     {
         return $this->hasMany(Tag::className(), ['id' => 'tag_id'])
-                    ->viaTable('{{%post_tag_post}}', ['post_id' => 'id']);
+                        ->viaTable('{{%post_tag_post}}', ['post_id' => 'id']);
     }
-
 
     public function getAuthor()
     {
@@ -251,7 +261,8 @@ class Post extends ActiveRecord implements OwnerAccess
 
     public function getThumbnail($options = ['class' => 'thumbnail pull-left', 'style' => 'width: 240px'])
     {
-        if (!empty($this->thumbnail)) {
+        if (!empty($this->thumbnail))
+        {
             return Html::img($this->thumbnail, $options);
         }
 
