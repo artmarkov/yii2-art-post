@@ -6,7 +6,7 @@ use yii\helpers\HtmlPurifier;
 /* @var $this yii\web\View */
 ?>
 
-    <div class="pull-<?= $position ?> col-lg-<?= $width ?> widget-height-<?= $height ?>">
+    <div class="pull-<?= $position ?> col-xs-12 col-md-<?= $width ?> widget-height-<?= $height ?>">
         <div class="panel panel-default dw-widget">
             <div class="panel-heading"><?= Yii::t('art/post', 'Posts Activity') ?></div>
             <div class="panel-body">
