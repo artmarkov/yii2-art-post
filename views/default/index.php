@@ -6,6 +6,9 @@ use artsoft\grid\GridView;
 use artsoft\helpers\Html;
 use artsoft\models\User;
 use artsoft\post\models\Post;
+use artsoft\post\models\Tag;
+use artsoft\post\models\Category;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 
@@ -70,10 +73,29 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'artsoft\grid\CheckboxColumn', 'options' => ['style' => 'width:10px']],
                     [
                         'class' => 'artsoft\grid\columns\TitleActionColumn',
+                        'options' => ['style' => 'width:300px'],
                         'controller' => '/post/default',
                         'title' => function (Post $model) {
                             return Html::a($model->title, ['view', 'id' => $model->id], ['data-pjax' => 0]);
                         },
+                    ],
+                    [
+                        'attribute' => 'category_id',
+                        'value' => function (Post $model) {
+                            return $model->category->title;
+                        },
+                        'filter' => Category::getCategories(),
+                        'options' => ['style' => 'width:300px'],
+                    ],
+                    [
+                        'attribute' => 'gridTagsSearch',
+                        'filter' => Tag::getTags(),
+                        'value' => function (Post $model) {
+                            return implode(', ',
+                                ArrayHelper::map($model->tags, 'id', 'title'));
+                        },
+                        'options' => ['style' => 'width:500px'],
+                        'format' => 'raw',
                     ],
                     [
                         'attribute' => 'created_by',

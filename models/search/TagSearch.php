@@ -19,7 +19,7 @@ class TagSearch extends Tag
     {
         return [
             [['id', 'created_by', 'updated_by'], 'integer'],
-            [['slug', 'title', 'created_at', 'updated_at'], 'safe'],
+            [['title', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TagSearch extends Tag
      */
     public function search($params)
     {
-        $query = Tag::find()->joinWith('translations');
+        $query = Tag::find()->joinWith('translation');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -69,8 +69,7 @@ class TagSearch extends Tag
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'slug', $this->slug])
-            ->andFilterWhere(['like', 'title', $this->title]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }

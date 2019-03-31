@@ -45,6 +45,7 @@ class Post extends ActiveRecord implements OwnerAccess {
     const COMMENT_STATUS_OPEN = 1;
 
      public $published_time;
+     public $gridTagsSearch;
      
     /**
      * @inheritdoc
@@ -149,6 +150,7 @@ class Post extends ActiveRecord implements OwnerAccess {
             'updated_at' => Yii::t('art', 'Updated'),
             'revision' => Yii::t('art', 'Revision'),
             'tag_list' => Yii::t('art/post', 'Tags'),
+            'gridTagsSearch' => Yii::t('art/post', 'Tags'),
         ];
     }
 

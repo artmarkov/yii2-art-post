@@ -19,7 +19,7 @@ class CategorySearch extends Category
     {
         return [
             [['id', 'visible', 'created_by', 'updated_by', 'sortOrder'], 'integer'],
-            [['slug', 'title', 'description', 'created_at', 'updated_at'], 'safe'],
+            [['title', 'description', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class CategorySearch extends Category
      */
     public function search($params)
     {
-        $query = Category::find()->joinWith('translations');
+        $query = Category::find()->joinWith('translation');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -70,14 +70,7 @@ class CategorySearch extends Category
             'updated_at' => $this->updated_at,
         ]);
 
-//        if (isset($this->parent_id) && $this->parent_id > 1) {
-//            $parent = Category::findOne((int)$this->parent_id);
-//            $query->andWhere(['>', 'left_border', $parent->left_border]);
-//            $query->andWhere(['<', 'right_border', $parent->right_border]);
-//        }
-
-        $query->andFilterWhere(['like', 'slug', $this->slug])
-            ->andFilterWhere(['like', 'title', $this->title])
+        $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;

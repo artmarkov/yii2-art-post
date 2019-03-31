@@ -21,8 +21,8 @@ class PostSearch extends Post
     public function rules()
     {
         return [
-            [['id', 'created_by', 'updated_by', 'status', 'comment_status', 'revision'], 'integer'],
-            [['published_at_operand', 'slug', 'title', 'content', 'published_at', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'category_id', 'created_by', 'updated_by', 'status', 'comment_status', 'revision'], 'integer'],
+            [['gridTagsSearch', 'published_at_operand', 'title', 'content', 'published_at', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -44,7 +44,7 @@ class PostSearch extends Post
      */
     public function search($params)
     {
-        $query = Post::find()->joinWith('translations');
+        $query = Post::find()->joinWith('translation');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -63,9 +63,16 @@ class PostSearch extends Post
         if (!$this->validate()) {
             return $dataProvider;
         }
+         
+        $query->with(['tags']);       
+        
+        if ($this->gridTagsSearch) {
+            $query->joinWith(['tags']);
+        }
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'category_id' => $this->category_id,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'status' => $this->status,
@@ -73,6 +80,7 @@ class PostSearch extends Post
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'revision' => $this->revision,
+            'post_tag_post.tag_id' => $this->gridTagsSearch,
         ]);
 
         switch ($this->published_at_operand) {
@@ -90,8 +98,7 @@ class PostSearch extends Post
                 break;
         }
         
-        $query->andFilterWhere(['like', 'slug', $this->slug])
-            ->andFilterWhere(['like', 'title', $this->title])
+        $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'content', $this->content]);
 
         return $dataProvider;
