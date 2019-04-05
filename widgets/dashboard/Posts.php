@@ -46,9 +46,6 @@ class Posts extends DashboardWidget
             }
 
             return $this->render('posts', [
-                'height' => $this->height,
-                'width' => $this->width,
-                'position' => $this->position,
                 'posts' => $this->options,
                 'recentPosts' => $recentPosts,
             ]);

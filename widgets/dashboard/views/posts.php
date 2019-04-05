@@ -6,51 +6,49 @@ use yii\helpers\HtmlPurifier;
 /* @var $this yii\web\View */
 ?>
 
-    <div class="pull-<?= $position ?> col-xs-12 col-md-<?= $width ?> widget-height-<?= $height ?>">
-        <div class="panel panel-default dw-widget">
-            <div class="panel-heading"><?= Yii::t('art/post', 'Posts Activity') ?></div>
-            <div class="panel-body">
+<div class="panel panel-default dw-widget">
+    <div class="panel-heading"><?= Yii::t('art/post', 'Posts Activity') ?></div>
+    <div class="panel-body">
 
-                <?php if (count($recentPosts)): ?>
-                    <div class="clearfix">
-                        <?php foreach ($recentPosts as $post) : ?>
-                            <div class="clearfix dw-post">
+        <?php if (count($recentPosts)): ?>
+            <div class="clearfix">
+                <?php foreach ($recentPosts as $post) : ?>
+                    <div class="clearfix dw-post">
 
-                                <div class="clearfix">
-                                    <div style="float: right">
-                                        <a class="dot-left"><?= HtmlPurifier::process($post->author->username); ?></a>
-                                        <span class="dot-left dot-right"><?= "{$post->publishedDate}" ?></span>
-                                    </div>
-                                    <div>
-                                        <?= Html::a(HtmlPurifier::process($post->title), ['post/default/view', 'id' => $post->id]) ?>
-                                    </div>
-                                </div>
-
-                                <div class="dw-post-content">
-                                    <?= HtmlPurifier::process(mb_substr(strip_tags($post->content), 0, 200, "UTF-8")); ?>
-                                    <?= (strlen(strip_tags($post->content)) > 200) ? '...' : '' ?>
-                                </div>
-
+                        <div class="clearfix">
+                            <div style="float: right">
+                                <a class="dot-left"><?= HtmlPurifier::process($post->author->username); ?></a>
+                                <span class="dot-left dot-right"><?= "{$post->publishedDate}" ?></span>
                             </div>
+                            <div>
+                                <?= Html::a(HtmlPurifier::process($post->title), ['post/default/view', 'id' => $post->id]) ?>
+                            </div>
+                        </div>
 
-                        <?php endforeach; ?>
+                        <div class="dw-post-content">
+                            <?= HtmlPurifier::process(mb_substr(strip_tags($post->content), 0, 200, "UTF-8")); ?>
+                            <?= (strlen(strip_tags($post->content)) > 200) ? '...' : '' ?>
+                        </div>
+
                     </div>
 
-                    <div class="dw-quick-links">
-                        <?php $list = [] ?>
-                        <?php foreach ($posts as $post) : ?>
-                            <?php $list[] = Html::a("<b>{$post['count']}</b> {$post['label']}", $post['url']); ?>
-                        <?php endforeach; ?>
-                        <?= implode(' | ', $list) ?>
-                    </div>
-
-                <?php else: ?>
-                    <h4><em><?= Yii::t('art/post', 'No posts found.') ?></em></h4>
-                <?php endif; ?>
-
+                <?php endforeach; ?>
             </div>
-        </div>
+
+            <div class="dw-quick-links">
+                <?php $list = [] ?>
+                <?php foreach ($posts as $post) : ?>
+                    <?php $list[] = Html::a("<b>{$post['count']}</b> {$post['label']}", $post['url']); ?>
+                <?php endforeach; ?>
+                <?= implode(' | ', $list) ?>
+            </div>
+
+        <?php else: ?>
+            <h4><em><?= Yii::t('art/post', 'No posts found.') ?></em></h4>
+        <?php endif; ?>
+
     </div>
+</div>
 <?php
 $css = <<<CSS
 .dw-widget{
