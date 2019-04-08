@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-sm-12">
             <h3 class="lte-hide-title page-title"><?= Html::encode($this->title) ?></h3>
-            <?= Html::a(Yii::t('art', 'Add New'), ['create'], ['class' => 'btn btn-sm btn-primary']) ?>
+            <?= Html::a(Yii::t('art', 'Add New'), ['/post/default/create'], ['class' => 'btn btn-sm btn-primary']) ?>
             <?= Html::a(Yii::t('art/post', 'Categories'), ['/post/category/index'], ['class' => 'btn btn-sm btn-primary']) ?>
         </div>
     </div>
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => ['style' => 'width:300px'],
                         'controller' => '/post/default',
                         'title' => function (Post $model) {
-                            return Html::a($model->title, ['view', 'id' => $model->id], ['data-pjax' => 0]);
+                            return Html::a($model->title, ['/post/default/view', 'id' => $model->id], ['data-pjax' => 0]);
                         },
                     ],
                     [

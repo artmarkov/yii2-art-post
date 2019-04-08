@@ -76,7 +76,7 @@ use artsoft\post\models\Tag;
                                     <?= Html::a(Yii::t('art', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
                                 <?php else: ?>
                                     <?= Html::submitButton(Yii::t('art', 'Save'), ['class' => 'btn btn-primary']) ?>
-                                    <?= Html::a(Yii::t('art', 'Delete'), ['delete', 'id' => $model->id], [
+                                    <?= Html::a(Yii::t('art', 'Delete'), ['/page/default/delete', 'id' => $model->id], [
                                         'class' => 'btn btn-default',
                                         'data' => [
                                             'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
@@ -113,7 +113,7 @@ use artsoft\post\models\Tag;
 
                         <?= $form->field($model, 'status')->dropDownList(Post::getStatusList()) ?>
 
-                        <?php if (!$model->isNewRecord): ?>
+                        <?php if (!$model->isNewRecord  && User::hasPermission('viewUsers')): ?>
                             <?= $form->field($model, 'created_by')->dropDownList(User::getUsersList()) ?>
                         <?php endif; ?>
 
