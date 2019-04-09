@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'artsoft\grid\CheckboxColumn', 'options' => ['style' => 'width:10px']],
                     [
                         'class' => 'artsoft\grid\columns\TitleActionColumn',
-                        'options' => ['style' => 'width:300px'],
+                        'options' => ['style' => 'width: 300px'],
                         'controller' => '/post/default',
                         'title' => function (Post $model) {
                             return Html::a($model->title, ['/post/default/view', 'id' => $model->id], ['data-pjax' => 0]);
@@ -85,7 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             return $model->category->title;
                         },
                         'filter' => Category::getCategories(),
-                        'options' => ['style' => 'width:300px'],
                     ],
                     [
                         'attribute' => 'gridTagsSearch',
@@ -94,7 +93,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             return implode(', ',
                                 ArrayHelper::map($model->tags, 'id', 'title'));
                         },
-                        'options' => ['style' => 'width:500px'],
                         'format' => 'raw',
                     ],
                     [
@@ -107,7 +105,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                         'format' => 'raw',
                         'visible' => User::hasPermission('viewUsers'),
-                        'options' => ['style' => 'width:180px'],
                     ],
                     [
                         'class' => 'artsoft\grid\columns\StatusColumn',

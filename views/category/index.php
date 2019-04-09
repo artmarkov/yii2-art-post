@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'id' => 'post-category-grid',
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
+                'sortableAction' => ['grid-sort'],
                 'bulkActionOptions' => [
                     'gridId' => 'post-category-grid',
                     'actions' => [Url::to(['bulk-delete']) => Yii::t('art', 'Delete')]
@@ -50,23 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         'class' => 'artsoft\grid\columns\TitleActionColumn',
                         'controller' => '/post/category',
                         'title' => function (Category $model) {
-                            return Html::a($model->title, ['/post/category/update', 'id' => $model->id], ['data-pjax' => 0]);
+                            return Html::encode($model->title);
                         },
                         'buttonsTemplate' => '{update} {delete}',
                     ],
-//                    [
-//                        'attribute' => 'parent_id',
-//                        'value' => function (Category $model) {
-//                            if ($parent = $model->getParent()->one() AND $parent->id > 1) {
-//                                return Html::a($parent->title, ['update', 'id' => $parent->id], ['data-pjax' => 0]);
-//                            } else {
-//                                return '<span class="not-set">' . Yii::t('yii', '(not set)') . '</span>';
-//                            }
-//                        },
-//                        'format' => 'raw',
-//                        'filter' => Category::getCategories(),
-//                        'filterInputOptions' => ['class' => 'form-control', 'encodeSpaces' => true],
-//                    ],
                     'description:ntext',
                     [
                         'class' => 'artsoft\grid\columns\StatusColumn',

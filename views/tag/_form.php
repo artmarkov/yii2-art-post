@@ -40,14 +40,41 @@ use artsoft\widgets\LanguagePills;
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="record-info">
+                        <?php if (!$model->isNewRecord): ?>
 
+                            <div class="form-group clearfix">
+                                <label class="control-label" style="float: left; padding-right: 5px;">
+                             <?= $model->attributeLabels()['created_at'] ?> :
+                                </label>
+                                <span><?= $model->createdDatetime ?></span>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="control-label" style="float: left; padding-right: 5px;">
+                            <?= $model->attributeLabels()['updated_at'] ?> :
+                                </label>
+                                <span><?= $model->updatedDatetime ?></span>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="control-label" style="float: left; padding-right: 5px;">
+                            <?= $model->attributeLabels()['created_by'] ?> :
+                                </label>
+                                <span><?= $model->createdBy->username ?></span>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="control-label" style="float: left; padding-right: 5px;">
+                            <?= $model->attributeLabels()['updated_by'] ?> :
+                                </label>
+                                <span><?= $model->updatedBy->username ?></span>
+                            </div>
+                        <?php endif; ?>
                         <div class="form-group">
                             <?php if ($model->isNewRecord): ?>
                                 <?= Html::submitButton(Yii::t('art', 'Create'), ['class' => 'btn btn-primary']) ?>
-                                <?= Html::a(Yii::t('art', 'Cancel'), ['index'], ['class' => 'btn btn-default']) ?>
+                                <?= Html::a(Yii::t('art', 'Cancel'), ['/post/tag/index'], ['class' => 'btn btn-default']) ?>
                             <?php else: ?>
                                 <?= Html::submitButton(Yii::t('art', 'Save'), ['class' => 'btn btn-primary']) ?>
-                                <?= Html::a(Yii::t('art', 'Delete'), ['delete', 'id' => $model->id], [
+                                <?= Html::a(Yii::t('art', 'Delete'), ['/post/tag/delete', 'id' => $model->id], [
                                     'class' => 'btn btn-default',
                                     'data' => [
                                         'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),

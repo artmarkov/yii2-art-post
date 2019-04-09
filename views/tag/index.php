@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-sm-12">
             <h3 class="lte-hide-title page-title"><?= Html::encode($this->title) ?></h3>
-            <?= Html::a(Yii::t('art', 'Add New'), ['create'], ['class' => 'btn btn-sm btn-primary']) ?>
+            <?= Html::a(Yii::t('art', 'Add New'), ['/post/tag/create'], ['class' => 'btn btn-sm btn-primary']) ?>
         </div>
     </div>
 
@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'class' => 'artsoft\grid\columns\TitleActionColumn',
                         'controller' => '/post/tag',
                         'title' => function (Tag $model) {
-                            return Html::a($model->title, ['update', 'id' => $model->id], ['data-pjax' => 0]);
+                            return Html::encode($model->title);
                         },
                         'buttonsTemplate' => '{update} {delete}',
                     ],

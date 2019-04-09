@@ -43,7 +43,7 @@ class CategoryController extends BaseController
     public function actions()
     {
         return [
-            'sort' => [
+            'grid-sort' => [
                 'class' => SortableGridAction::className(),
                 'modelName' => $this->modelClass,
             ],

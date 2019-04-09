@@ -23,6 +23,7 @@ class m150825_202231_add_post_permissions extends PermissionsMigration
                     '/admin/post/*',
                     '/admin/post/default/*',
                     '/admin/post/category/*',
+                    '/admin/post/tag/*',
                 ],
                 'viewPosts' => [
                     'title' => 'View Posts',
@@ -83,7 +84,7 @@ class m150825_202231_add_post_permissions extends PermissionsMigration
                     ],
                 ],
                 'viewPostCategories' => [
-                    'title' => 'View Posts',
+                    'title' => 'View Posts Categories',
                     'links' => [
                         '/admin/post/category/index',
                         '/admin/post/category/grid-sort',

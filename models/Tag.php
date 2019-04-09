@@ -104,6 +104,36 @@ class Tag extends ActiveRecord implements OwnerAccess
         ];
     }
 
+     public function getCreatedDate()
+    {
+        return Yii::$app->formatter->asDate(($this->isNewRecord) ? time() : $this->created_at);
+    }
+
+    public function getUpdatedDate()
+    {
+        return Yii::$app->formatter->asDate(($this->isNewRecord) ? time() : $this->updated_at);
+    }
+
+    public function getCreatedTime()
+    {
+        return Yii::$app->formatter->asTime(($this->isNewRecord) ? time() : $this->created_at);
+    }
+
+    public function getUpdatedTime()
+    {
+        return Yii::$app->formatter->asTime(($this->isNewRecord) ? time() : $this->updated_at);
+    }
+
+    public function getCreatedDatetime()
+    {
+        return "{$this->createdDate} {$this->createdTime}";
+    }
+
+    public function getUpdatedDatetime()
+    {
+        return "{$this->updatedDate} {$this->updatedTime}";
+    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */

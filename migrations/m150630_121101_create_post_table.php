@@ -31,8 +31,7 @@ class m150630_121101_create_post_table extends Migration
         $this->createIndex('post_category_visible', self::POST_CATEGORY_TABLE, 'visible');
         $this->addForeignKey('fk_post_category_created_by', self::POST_CATEGORY_TABLE, 'created_by', '{{%user}}', 'id', 'SET NULL', 'CASCADE');
         $this->addForeignKey('fk_post_category_updated_by', self::POST_CATEGORY_TABLE, 'updated_by', '{{%user}}', 'id', 'SET NULL', 'CASCADE');
-        $this->insert(self::POST_CATEGORY_TABLE, ['id' => 1, 'slug' => 'root', 'depth' => 0, 'created_at' => time(), 'visible' => 0, 'left_border' => 0, 'right_border' => 2147483647]);
-
+        
         $this->createTable(self::POST_CATEGORY_LANG_TABLE, [
             'id' => $this->primaryKey(),
             'post_category_id' => $this->integer(),

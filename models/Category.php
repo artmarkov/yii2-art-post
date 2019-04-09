@@ -4,6 +4,7 @@ namespace artsoft\post\models;
 
 use artsoft\behaviors\MultilingualBehavior;
 use artsoft\models\OwnerAccess;
+use artsoft\models\User;
 use artsoft\db\ActiveRecord;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -63,7 +64,7 @@ class Category extends ActiveRecord implements OwnerAccess
                 'out_attribute' => 'slug',
                 'translit' => true           
             ],
-            'sort' => [
+            'grid-sort' => [
                 'class' => SortableGridBehavior::className(),
                 'sortableAttribute' => 'sortOrder',
             ],            
@@ -138,6 +139,22 @@ class Category extends ActiveRecord implements OwnerAccess
         return "{$this->updatedDate} {$this->updatedTime}";
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'updated_by']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
+    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */
