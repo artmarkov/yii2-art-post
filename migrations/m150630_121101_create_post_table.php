@@ -50,7 +50,6 @@ class m150630_121101_create_post_table extends Migration
             'category_id' => $this->integer(),
             'status' => $this->integer(1)->notNull()->defaultValue(0)->comment('0-pending,1-published'),
             'comment_status' => $this->integer(1)->notNull()->defaultValue(1)->comment('0-closed,1-open'),
-            'thumbnail' => $this->string(255),
             'published_at' => $this->integer(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),

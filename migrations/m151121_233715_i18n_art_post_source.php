@@ -25,7 +25,6 @@ class m151121_233715_i18n_art_post_source extends SourceMessagesMigration
             'Posts' => 1,
             'Tag' => 1,
             'Tags' => 1,
-            'Thumbnail' => 1,
         ];
     }
 }

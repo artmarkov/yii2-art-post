@@ -34,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="panel panel-default">
         <div class="panel-body">
             <h2><?= $model->title ?></h2>
-            <?= $model->getThumbnail(['class' => 'thumbnail pull-left', 'style' => 'width: 240px; margin:0 7px 7px 0;']) ?>
             <?= $model->content ?>
         </div>
     </div>

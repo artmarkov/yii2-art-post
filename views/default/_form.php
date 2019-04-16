@@ -37,8 +37,21 @@ use artsoft\post\models\Tag;
                         <?= $form->field($model, 'content')->widget(TinyMce::className()); ?>
 
                     </div>
+                </div>                
+                     
+                <?php if (!$model->isNewRecord) : ?>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <?= \artsoft\mediamanager\widgets\MediaManagerWidget::widget(['model' => $model]); ?>
+
+                    </div> 
                 </div>
-            </div>
+
+                <?php endif; ?>
+
+            </div>            
 
             <div class="col-md-3">
 
@@ -89,65 +102,43 @@ use artsoft\post\models\Tag;
                     </div>
                 </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
-
-                    <div class="record-info">
-                        <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-
-                        <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
-
-                        <?=
-                        $form->field($model, 'tag_list')->widget(nex\chosen\Chosen::className(), [
-                            'items' => Tag::getTags(),
-                            'multiple' => true,
-                            'translateCategory' => 'art/post',
-                            'placeholder' => Yii::t('art/post', 'Select Tags...'),
-                        ])
-                        ?>
-
-                        <?= $form->field($model, 'category_id')->dropDownList(Category::getCategories(), ['prompt' => '', 'encodeSpaces' => true]) ?>
-
-                        <?= $form->field($model, 'published_time')->widget(DatePicker::classname())->textInput(['autocomplete' => 'off']); ?>
-
-
-                        <?= $form->field($model, 'status')->dropDownList(Post::getStatusList()) ?>
-
-                        <?php if (!$model->isNewRecord  && User::hasPermission('viewUsers')): ?>
-                            <?= $form->field($model, 'created_by')->dropDownList(User::getUsersList()) ?>
-                        <?php endif; ?>
-
-                        <?= $form->field($model, 'comment_status')->dropDownList(Post::getCommentStatusList()) ?>
-
-                        <?= $form->field($model, 'view')->dropDownList($this->context->module->viewList) ?>
-
-                        <?= $form->field($model, 'layout')->dropDownList($this->context->module->layoutList) ?>
-
-                    </div>
-                </div>
-            </div>
-
                 <div class="panel panel-default">
                     <div class="panel-body">
+
                         <div class="record-info">
-                            <?= $form->field($model, 'thumbnail')->widget(artsoft\media\widgets\FileInput::className(), [
-                                'name' => 'image',
-                                'buttonTag' => 'button',
-                                'buttonName' => Yii::t('art', 'Browse'),
-                                'buttonOptions' => ['class' => 'btn btn-default btn-file-input'],
-                                'options' => ['class' => 'form-control'],
-                                'template' => '<div class="post-thumbnail thumbnail"></div><div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-                                'thumb' => $this->context->module->thumbnailSize,
-                                'imageContainer' => '.post-thumbnail',
-                                'pasteData' => artsoft\media\widgets\FileInput::DATA_URL,
-                                'callbackBeforeInsert' => 'function(e, data) {
-                                $(".post-thumbnail").show();
-                            }',
-                            ]) ?>
+                            <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+
+                            <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
+
+                            <?=
+                            $form->field($model, 'tag_list')->widget(nex\chosen\Chosen::className(), [
+                                'items' => Tag::getTags(),
+                                'multiple' => true,
+                                'translateCategory' => 'art/post',
+                                'placeholder' => Yii::t('art/post', 'Select Tags...'),
+                            ])
+                            ?>
+
+                            <?= $form->field($model, 'category_id')->dropDownList(Category::getCategories(), ['prompt' => '', 'encodeSpaces' => true]) ?>
+
+                            <?= $form->field($model, 'published_time')->widget(DatePicker::classname())->textInput(['autocomplete' => 'off']); ?>
+
+
+                            <?= $form->field($model, 'status')->dropDownList(Post::getStatusList()) ?>
+
+                            <?php if (!$model->isNewRecord  && User::hasPermission('viewUsers')): ?>
+                                <?= $form->field($model, 'created_by')->dropDownList(User::getUsersList()) ?>
+                            <?php endif; ?>
+
+                            <?= $form->field($model, 'comment_status')->dropDownList(Post::getCommentStatusList()) ?>
+
+                            <?= $form->field($model, 'view')->dropDownList($this->context->module->viewList) ?>
+
+                            <?= $form->field($model, 'layout')->dropDownList($this->context->module->layoutList) ?>
+
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 

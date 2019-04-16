@@ -23,7 +23,6 @@ use yii\helpers\Html;
  * @property integer $category_id
  * @property integer $status
  * @property integer $comment_status
- * @property string $thumbnail
  * @property integer $published_at
  * @property integer $created_at
  * @property integer $updated_at
@@ -121,7 +120,6 @@ class Post extends ActiveRecord implements OwnerAccess {
             [['created_at', 'updated_at'], 'safe'],
             [['slug'], 'string', 'max' => 127],
             [['tag_list'], 'safe'],
-            [['thumbnail'], 'string', 'max' => 255],
             ['published_time', 'date', 'format' => 'php:d.m.Y'],
             ['published_at', 'default', 'value' => time()],
         ];
@@ -144,7 +142,6 @@ class Post extends ActiveRecord implements OwnerAccess {
             'comment_status' => Yii::t('art', 'Comment Status'),
             'content' => Yii::t('art', 'Content'),
             'category_id' => Yii::t('art', 'Category'),
-            'thumbnail' => Yii::t('art/post', 'Thumbnail'),
             'published_at' => Yii::t('art', 'Published'),
             'created_at' => Yii::t('art', 'Created'),
             'updated_at' => Yii::t('art', 'Updated'),
@@ -259,16 +256,6 @@ class Post extends ActiveRecord implements OwnerAccess {
     {
         $content = explode($delimiter, $this->content);
         return strip_tags($content[0], $allowableTags);
-    }
-
-    public function getThumbnail($options = ['class' => 'thumbnail pull-left', 'style' => 'width: 240px'])
-    {
-        if (!empty($this->thumbnail))
-        {
-            return Html::img($this->thumbnail, $options);
-        }
-
-        return;
     }
 
     /**
