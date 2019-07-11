@@ -80,7 +80,8 @@ class Tag extends ActiveRecord implements OwnerAccess
     public function rules()
     {
         return [
-            [['title'], 'required', 'on' => self::SCENARIO_DEFAULT],
+            ['title', 'required', 'on' => self::SCENARIO_DEFAULT],
+            ['slug', 'required', 'enableClientValidation' => false],
             [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['slug', 'title'], 'string', 'max' => 200],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],

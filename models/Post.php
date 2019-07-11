@@ -116,6 +116,7 @@ class Post extends ActiveRecord implements OwnerAccess {
         return [
             [['title'], 'required'],
             [['created_by', 'updated_by', 'status', 'comment_status', 'revision', 'category_id'], 'integer'],
+            ['slug', 'required', 'enableClientValidation' => false],
             [['title', 'content', 'view', 'layout'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['slug'], 'string', 'max' => 127],
