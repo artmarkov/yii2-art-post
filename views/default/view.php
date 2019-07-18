@@ -27,12 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]) ?>
 
             <?= Html::a(Yii::t('art', 'Add New'), ['/post/default/create'], ['class' => 'btn btn-sm btn-success pull-right']) ?>
-
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-body">
+       
             <h2><?= $model->title ?></h2>
             <?= $model->content ?>
         </div>
