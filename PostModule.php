@@ -21,7 +21,7 @@ class PostModule extends \yii\base\Module
     /**
      * Version number of the module.
      */
-    const VERSION = '0.1.0';
+    const VERSION = '1.0.0';
 
     public $controllerNamespace = 'artsoft\post\controllers';
     public $viewList;
